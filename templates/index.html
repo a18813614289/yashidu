@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel到Word自动化工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f44336;
+            color: white;
+        }
+        .container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .instructions {
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Excel到Word自动化工具</h1>
+        
+        <div class="instructions">
+            <p><strong>使用说明：</strong></p>
+            <p>1. 上传Excel文件（.xlsx格式）</p>
+            <p>2. 上传Word模板文件（.docx格式）</p>
+            <p>3. 设置复制次数（默认为20）</p>
+            <p>4. 点击"处理文件"按钮</p>
+            <p>5. 等待处理完成后，下载生成的Word文件</p>
+        </div>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <form action="/process" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="excel_file">Excel文件：</label>
+                <input type="file" id="excel_file" name="excel_file" accept=".xlsx" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="word_file">Word模板文件：</label>
+                <input type="file" id="word_file" name="word_file" accept=".docx" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="copy_count">复制次数：</label>
+                <input type="number" id="copy_count" name="copy_count" min="1" value="20">
+            </div>
+            
+            <button type="submit">处理文件</button>
+        </form>
+    </div>
+</body>
+</html>
