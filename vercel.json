@@ -6,7 +6,9 @@
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "50mb",
-        "runtime": "python3.10"
+        "runtime": "python3.10",
+        "installCommand": "pip install -r requirements.txt",
+        "buildCommand": "echo 'Build completed'"
       }
     }
   ],
@@ -15,5 +17,16 @@
       "src": "/(.*)",
       "dest": "web_app.py"
     }
-  ]
+  ],
+  "env": {
+    "FLASK_APP": "web_app.py",
+    "FLASK_ENV": "production",
+    "PYTHONUNBUFFERED": "1"
+  },
+  "functions": {
+    "web_app.py": {
+      "memory": 1024,
+      "timeout": 60
+    }
+  }
 }
