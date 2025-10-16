@@ -125,14 +125,17 @@ def process():
         flash('服务器内部错误')
         return redirect(url_for('index'))
 
-# 用于Vercel的gunicorn入口点
-# Vercel会查找名为'application'的变量作为WSGI应用
+# 用于WSGI服务器的标准入口点
+# Gunicorn和Render会查找名为'application'的变量
 def application(environ, start_response):
     # 更新Flask应用的环境变量
     for key, value in environ.items():
         os.environ[key] = value
     # 返回Flask的WSGI应用
     return app.wsgi_app(environ, start_response)
+
+# 别名，确保与不同WSGI服务器兼容
+wsgi_app = application
 
 # 开发环境入口
 if __name__ == '__main__':

@@ -41,7 +41,54 @@
 
 ### Render部署
 
-同样，项目也包含Render部署配置。需要在GitHub Secrets中设置：
+#### 部署步骤
+
+1. **创建Render账号**
+   - 访问 [Render官网](https://render.com/) 注册账号
+
+2. **创建新的Web Service**
+   - 登录后点击 "New +" 按钮
+   - 选择 "Web Service"
+   - 连接你的GitHub仓库
+   - 选择你要部署的仓库
+
+3. **配置部署设置**
+   - **Name**: 输入应用名称
+   - **Region**: 选择最近的区域（如 "Oregon (US West)"）
+   - **Branch**: 选择主分支（如 "master" 或 "main"）
+   - **Runtime**: 选择 "Python"
+   - **Build Command**: 输入 `pip install -r requirements.txt`
+   - **Start Command**: 输入 `gunicorn web_app:application`
+   - **Environment Variables**:
+     - 点击 "Add Environment Variable"
+     - 添加 `FLASK_ENV` = `production`
+     - 添加 `FLASK_SECRET_KEY` = 任意安全的随机字符串
+
+4. **配置资源**
+   - 选择 "Free" 或适合的付费计划
+   - 确认配置后点击 "Create Web Service"
+
+5. **等待部署完成**
+   - Render会自动构建和部署应用
+   - 部署完成后，可以通过提供的URL访问应用
+
+#### 注意事项
+
+- Render的免费计划会在一段时间不活跃后自动休眠
+- 对于文件处理任务，建议使用至少2GB内存的付费计划
+- 应用会自动连接GitHub，每次推送到master/main分支会触发重新部署
+
+#### 故障排除
+
+如果部署失败，请检查：
+
+1. 构建日志中的错误信息
+2. 确保requirements.txt中的依赖版本兼容
+3. 检查Flask应用是否正确配置了WSGI入口点（application函数）
+
+#### 所需环境变量
+
+在GitHub Secrets中设置：
 - RENDER_SERVICE_ID：您的Render服务ID
 - RENDER_API_KEY：您的Render API密钥
 
