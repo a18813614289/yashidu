@@ -90,5 +90,9 @@ def process():
         return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    # 生产环境请设置debug=False
-    app.run(debug=True)
+    import os
+    # 使用Vercel提供的PORT环境变量
+    port = int(os.environ.get("PORT", 5000))
+    # 生产环境设置debug=False，开发环境可以设为True
+    debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
