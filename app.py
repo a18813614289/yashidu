@@ -4,12 +4,16 @@ import sys
 import tempfile
 from werkzeug.utils import secure_filename
 import traceback
+import platform
 
 # 添加当前目录到Python路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # 导入原始脚本的功能
 import _9 as压实度_module
+
+# 平台检测
+IS_WINDOWS = platform.system() == 'Windows'
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB限制
@@ -200,13 +204,22 @@ def process_files():
         output_path = os.path.join(TEMP_DIR, output_filename)
         
         # 调用原始脚本的功能
-        # 这里需要根据原始脚本的实际函数名和参数进行调整
-        # 假设原始脚本有一个名为run_excel_to_word_automation的主函数
+        # 添加平台兼容性处理
         def status_callback(message):
             print(f"处理状态: {message}")
         
-        # 尝试调用原始脚本的主要功能
-       压实度_module.run_excel_to_word_automation(excel_path, word_path, copy_count, output_path, status_callback)
+        try:
+            # 尝试调用原始脚本的主要功能
+            # 在Linux环境中，需要确保原始脚本不会尝试使用pywin32
+            if not IS_WINDOWS:
+                status_callback("在Linux环境中运行，将跳过需要pywin32的功能")
+            
+            压实度_module.run_excel_to_word_automation(excel_path, word_path, copy_count, output_path, status_callback)
+        except ImportError as e:
+            if "win32com" in str(e) or "pywin32" in str(e):
+                raise Exception("当前环境不支持Excel COM功能，请在Windows系统上运行或修改脚本以移除对pywin32的依赖")
+            else:
+                raise
         
         # 返回成功信息
         return jsonify({

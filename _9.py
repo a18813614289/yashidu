@@ -9,6 +9,18 @@ import traceback
 import os
 import re
 from datetime import datetime
+import platform
+
+# 平台检测
+IS_WINDOWS = platform.system() == 'Windows'
+# 尝试导入pywin32，但不强制要求
+win32com = None
+if IS_WINDOWS:
+    try:
+        import win32com.client
+    except ImportError:
+        print("警告：未安装pywin32，Excel COM功能将不可用")
+        pass
 
 # 获取附表1的字体格式
 def get_heading_format(doc, heading):
@@ -194,11 +206,11 @@ def should_refresh_via_excel(excel_path, table_ranges, col_range, all_data):
         return False
 
 def refresh_excel_values_via_com(excel_file_path, log_status):
-    try:
-        import win32com.client  # 需要已安装 Excel 和 pywin32
-    except Exception as e:
-        log_status(f"提示：检测到可能是公式未计算导致的数据为空，但未安装 pywin32 或不可用，跳过自动刷新。错误: {e}")
+    # 首先检查是否在Windows环境中并且win32com可用
+    if not IS_WINDOWS or win32com is None:
+        log_status(f"提示：当前环境不支持Excel COM功能（{'非Windows环境' if not IS_WINDOWS else '未安装pywin32'}），跳过自动刷新。")
         return False
+    
     try:
         excel = win32com.client.Dispatch("Excel.Application")
         excel.Visible = False
