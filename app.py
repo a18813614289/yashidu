@@ -254,5 +254,5 @@ def get_status():
     # 这里可以实现一个简单的状态查询接口
     return jsonify({'status': 'running'})
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+# Vercel 兼容导出
+export = app
