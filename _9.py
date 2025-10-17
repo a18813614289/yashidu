@@ -1054,42 +1054,37 @@ def run_excel_to_word_automation(excel_path, word_path, copy_count, new_word_pat
                         num_cell._element.remove(paragraph._element)
                     # 添加新内容
                     p = num_cell.add_paragraph()
-                    run = p.add_run(str(row_offset + 1))  # 动态生成序号
-                    run.font.name = TABLE_DATA_FONT_NAME
-                    run.font.size = TABLE_DATA_FONT_SIZE
-                    run.font.bold = TABLE_DATA_FONT_BOLD
+                    text_content = str(row_offset + 1)
+                    # 逐字符设置字体
+                    for char in text_content:
+                        run = p.add_run(char)
+                        if '\u4e00' <= char <= '\u9fff':  # 汉字
+                            run.font.name = "宋体"
+                        else:  # 其他字符
+                            run.font.name = "Times New Roman"
+                        run.font.size = Pt(10.5)  # 五号字
+                        run.font.bold = False  # 常规
                     p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
                     
                     # 第二列放置提取的值
                     if len(row.cells) > 1:
                         value_cell = row.cells[1]
-                        # 获取原有格式
-                        original_font_name = "宋体"
-                        original_font_size = Pt(10.5)  # 五号字对应10.5磅
-                        original_bold = False
-                        if value_cell.paragraphs and value_cell.paragraphs[0].runs:
-                            original_run = value_cell.paragraphs[0].runs[0]
-                            original_font_name = original_run.font.name or "宋体"
-                            original_font_size = original_run.font.size or Pt(10.5)
-                            original_bold = original_run.font.bold
-                        
                         # 清空现有内容
                         for paragraph in list(value_cell.paragraphs):
                             value_cell._element.remove(paragraph._element)
                         # 添加新内容
                         p = value_cell.add_paragraph()
-                        run = p.add_run(extracted_value)
-                        # 判断内容是文字还是数字，设置相应格式
-                        if extracted_value.replace('.','',1).isdigit():  # 数字
-                            run.font.name = "Times New Roman"
-                            run.font.size = Pt(10.5)  # 五号字
-                            run.font.bold = False  # 常规
-                        else:  # 文字
-                            run.font.name = "宋体"
+                        # 逐字符设置字体
+                        for char in extracted_value:
+                            run = p.add_run(char)
+                            if '\u4e00' <= char <= '\u9fff':  # 汉字
+                                run.font.name = "宋体"
+                            else:  # 其他字符
+                                run.font.name = "Times New Roman"
                             run.font.size = Pt(10.5)  # 五号字
                             run.font.bold = False  # 常规
                         p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                        log_status(f"已设置格式: {run.font.name} {run.font.size.pt}磅 常规")
+                        log_status(f"已设置第二列格式，汉字使用宋体，非汉字使用Times New Roman")
                     
                     # 第三列放置设计值（≥94）
                     if len(row.cells) > 2:
@@ -1115,28 +1110,23 @@ def run_excel_to_word_automation(excel_path, word_path, copy_count, new_word_pat
                     # 第四列放置压实度%平均值
                     if len(row.cells) > 3:
                         avg_cell = row.cells[3]
-                        # 获取原有格式
-                        original_font_name = "宋体"
-                        original_font_size = Pt(10.5)
-                        original_bold = False
-                        if avg_cell.paragraphs and avg_cell.paragraphs[0].runs:
-                            original_run = avg_cell.paragraphs[0].runs[0]
-                            original_font_name = original_run.font.name or "宋体"
-                            original_font_size = original_run.font.size or Pt(10.5)
-                            original_bold = original_run.font.bold
-                        
                         # 清空现有内容
                         for paragraph in list(avg_cell.paragraphs):
                             avg_cell._element.remove(paragraph._element)
                         # 添加新内容
                         p = avg_cell.add_paragraph()
-                        run = p.add_run(f"{avg_value}")  # 只保留数值部分，不带%
-                        # 强制设置为Times New Roman五号
-                        run.font.name = "Times New Roman"
-                        run.font.size = Pt(10.5)  # 五号字
-                        run.font.bold = False  # 常规
+                        text_content = f"{avg_value}"
+                        # 逐字符设置字体
+                        for char in text_content:
+                            run = p.add_run(char)
+                            if '\u4e00' <= char <= '\u9fff':  # 汉字
+                                run.font.name = "宋体"
+                            else:  # 其他字符
+                                run.font.name = "Times New Roman"
+                            run.font.size = Pt(10.5)  # 五号字
+                            run.font.bold = False  # 常规
                         p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                        log_status(f"已设置平均值格式: Times New Roman 10.5磅 常规")
+                        log_status(f"已设置第四列格式，汉字使用宋体，非汉字使用Times New Roman")
                     
                     # 第五列和第六列填写数据行数
                     if len(row.cells) > 5:
@@ -1152,10 +1142,16 @@ def run_excel_to_word_automation(excel_path, word_path, copy_count, new_word_pat
                                 count_cell._element.remove(paragraph._element)
                             # 添加新内容
                             p = count_cell.add_paragraph()
-                            run = p.add_run(str(data_row_count))
-                            run.font.name = "Times New Roman"
-                            run.font.size = Pt(10.5)  # 五号字
-                            run.font.bold = False  # 常规
+                            text_content = str(data_row_count)
+                            # 逐字符设置字体
+                            for char in text_content:
+                                run = p.add_run(char)
+                                if '\u4e00' <= char <= '\u9fff':  # 汉字
+                                    run.font.name = "宋体"
+                                else:  # 其他字符
+                                    run.font.name = "Times New Roman"
+                                run.font.size = Pt(10.5)  # 五号字
+                                run.font.bold = False  # 常规
                             p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
                             log_status(f"已设置检测点数: {data_row_count}")
                         
@@ -1167,10 +1163,16 @@ def run_excel_to_word_automation(excel_path, word_path, copy_count, new_word_pat
                                 qualified_cell._element.remove(paragraph._element)
                             # 添加新内容
                             p = qualified_cell.add_paragraph()
-                            run = p.add_run(str(data_row_count))
-                            run.font.name = "Times New Roman"
-                            run.font.size = Pt(10.5)  # 五号字
-                            run.font.bold = False  # 常规
+                            text_content = str(data_row_count)
+                            # 逐字符设置字体
+                            for char in text_content:
+                                run = p.add_run(char)
+                                if '\u4e00' <= char <= '\u9fff':  # 汉字
+                                    run.font.name = "宋体"
+                                else:  # 其他字符
+                                    run.font.name = "Times New Roman"
+                                run.font.size = Pt(10.5)  # 五号字
+                                run.font.bold = False  # 常规
                             p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
                             log_status(f"已设置合格点数: {data_row_count}")
 
@@ -1182,10 +1184,16 @@ def run_excel_to_word_automation(excel_path, word_path, copy_count, new_word_pat
                                 rate_cell._element.remove(paragraph._element)
                             # 添加新内容
                             p = rate_cell.add_paragraph()
-                            run = p.add_run("100")
-                            run.font.name = "Times New Roman"
-                            run.font.size = Pt(10.5)  # 五号字
-                            run.font.bold = False  # 常规
+                            text_content = "100"
+                            # 逐字符设置字体
+                            for char in text_content:
+                                run = p.add_run(char)
+                                if '\u4e00' <= char <= '\u9fff':  # 汉字
+                                    run.font.name = "宋体"
+                                else:  # 其他字符
+                                    run.font.name = "Times New Roman"
+                                run.font.size = Pt(10.5)  # 五号字
+                                run.font.bold = False  # 常规
                             p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
                             log_status("已设置合格率: 100")
 
@@ -1197,17 +1205,16 @@ def run_excel_to_word_automation(excel_path, word_path, copy_count, new_word_pat
                                 ref_cell._element.remove(paragraph._element)
                             # 添加新内容
                             p = ref_cell.add_paragraph()
-                            # 根据规范，将"附表"两字设置为宋体常规五号，数字部分设置为Times New Roman常规五号
-                            run_fubiao = p.add_run("附表")  # "附表"两字
-                            run_fubiao.font.name = "宋体"
-                            run_fubiao.font.size = Pt(10.5)  # 五号字
-                            run_fubiao.font.bold = False  # 常规
-                            
-                            run_num = p.add_run(str(row_offset + 1))  # 数字部分
-                            run_num.font.name = "Times New Roman"
-                            run_num.font.size = Pt(10.5)  # 五号字
-                            run_num.font.bold = False  # 常规
-                            
+                            # 逐字符设置字体
+                            full_text = f"附表{row_offset + 1}"
+                            for char in full_text:
+                                run = p.add_run(char)
+                                if '\u4e00' <= char <= '\u9fff':  # 汉字
+                                    run.font.name = "宋体"
+                                else:  # 其他字符
+                                    run.font.name = "Times New Roman"
+                                run.font.size = Pt(10.5)  # 五号字
+                                run.font.bold = False  # 常规
                             p.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
                             log_status(f"已设置详细数据参见附表: 附表{row_offset + 1}")
                 
@@ -2471,7 +2478,7 @@ def unify_all_schedule_headings_font(word_doc_path, log_status=None):
                 original_text = para.text
                 para.clear()
                 
-                # 逐字符处理，分开汉字和数字
+                # 逐字符处理，分开汉字和非汉字
                 current_run = None
                 current_is_chinese = None
                 
@@ -2479,10 +2486,8 @@ def unify_all_schedule_headings_font(word_doc_path, log_status=None):
                     # 判断字符类型
                     if '\u4e00' <= char <= '\u9fff' or char in '（）':  # 汉字或括号
                         is_chinese = True
-                    elif char.isdigit():  # 数字
+                    else:  # 所有其他字符（包括数字、字母、符号等）
                         is_chinese = False
-                    else:  # 其他字符（空格、标点等），跟随前一个字符的格式
-                        is_chinese = current_is_chinese if current_is_chinese is not None else True
                     
                     # 如果字符类型改变，创建新的run
                     if current_run is None or is_chinese != current_is_chinese:

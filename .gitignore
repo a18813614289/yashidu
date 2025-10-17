@@ -1,65 +1,24 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
 .Python
-build/
-dist/
-downloads/
-env/
-.eggs/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# Flask
+instance/
+webapp/venv/
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-pytestdebug.log
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff: .env, .secret_key, etc
-.env
-.secret_key
-
-# Flask stuff: .flaskenv
-.flaskenv
-
-# Virtual environments
+# Venv
 venv/
-.env/
-.venv/
+env/
 ENV/
 
-# Editor directories and files
+# Windows
+Thumbs.db
+.DS_Store
+
+# IDE
 .vscode/
 .idea/
 *.suo
@@ -68,7 +27,11 @@ ENV/
 *.sln
 *.sw?
 
-# OS generated files
+# Logs
+logs/
+*.log
+
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -77,29 +40,13 @@ ENV/
 ehthumbs.db
 Thumbs.db
 
-# Log files
-*.log
-logs/
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Temporary files
-*.tmp
-*.temp
-.tmp/
-.temp/
-
-# User specific files
-*.user
-
-# Local configuration files
-local_settings.py
-
-# Build directories
+# Build outputs
 build/
-out/
-
-# Debug
-.vscode/launch.json
-
-# Testing
-.venv/
-.pytest_cache/
+dist/

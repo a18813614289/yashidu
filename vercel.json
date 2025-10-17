@@ -2,31 +2,17 @@
   "version": 2,
   "builds": [
     {
-      "src": "web_app.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb",
-        "runtime": "python3.10",
-        "installCommand": "pip install -r requirements.txt",
-        "buildCommand": "echo 'Build completed'"
-      }
+      "src": "app.py",
+      "use": "@vercel/python"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "web_app.py"
+      "dest": "app.py"
     }
   ],
   "env": {
-    "FLASK_APP": "web_app.py",
-    "FLASK_ENV": "production",
-    "PYTHONUNBUFFERED": "1"
-  },
-  "functions": {
-    "web_app.py": {
-      "memory": 1024,
-      "timeout": 60
-    }
+    "PYTHON_VERSION": "3.9"
   }
 }
